@@ -1,9 +1,13 @@
-import { FrontPageUI } from './components/FrontPage/FrontPageUI'
+import { FrontPageLogic } from './components/FrontPage/FrontPageLogic'
+import { ChatPageLogic } from './components/ChatPage/ChatPageLogic'
+import './index.css'
+import { useUserStore } from './stores/userStore'
 
 function App() {
+  const { isLoggedIn } = useUserStore()
 
   return (
-    <FrontPageUI />
+    isLoggedIn ? <ChatPageLogic /> : <FrontPageLogic />
   )
 }
 
