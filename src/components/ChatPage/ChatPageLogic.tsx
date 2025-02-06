@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useUserStore } from '../../stores/userStore'
 import { useChatStore } from '../../stores/chatStore'
 
-export const ChatPageLogic = () => {
+const ChatPageLogic = () => {
     const { username, userInterests, setUserSocketId } = useUserStore()
     const { messages, addMessageToMessages } = useChatStore()
     const [inputMessage, setInputMessage] = useState('')
@@ -28,7 +28,7 @@ export const ChatPageLogic = () => {
             setUserSocketId(socket.id)
         });
 
-        socket.emit('joinRoom', username, userInterests )
+        socket.emit('joinRoom', username, userInterests)
 
         socket.on('userJoined', (users) => {
             if (users.length === 2) {
@@ -75,11 +75,11 @@ export const ChatPageLogic = () => {
     if (!socket.id) return null
 
     return (
-        <ChatPageUI 
-            handleSendMessage={handleSendMessage} 
-            inputMessage={inputMessage} 
-            setInputMessage={setInputMessage} 
-            messages={messages} 
+        <ChatPageUI
+            handleSendMessage={handleSendMessage}
+            inputMessage={inputMessage}
+            setInputMessage={setInputMessage}
+            messages={messages}
             socketId={socket.id}
             isTyping={isTyping}
             messagesEndRef={messagesEndRef}
@@ -89,3 +89,4 @@ export const ChatPageLogic = () => {
         />
     )
 }
+export { ChatPageLogic as ChatPage }

@@ -1,33 +1,23 @@
 import { useState, useEffect } from 'react'
 import { FrontPageUI } from './FrontPageUI'
 import { useUserStore } from '../../stores/userStore'
-import { FaCode, FaServer, FaShieldAlt, FaRobot, FaCloud, FaCubes, FaCloudDownloadAlt, FaBullhorn } from 'react-icons/fa'
 import { socket } from '../../utils/socket'
+import { interests } from '../constants'
 
-export const FrontPageLogic = () => {
+const FrontPageLogic = () => {
     const { username, setUsername, userInterests, setUserInterests, setIsLoggedIn } = useUserStore()
     const [connectedUsers, setConnectedUsers] = useState(0)
-    const interests = [
-        { name: 'Development', icon: <FaCode /> },
-        { name: 'DevOps', icon: <FaServer /> },
-        { name: 'Security', icon: <FaShieldAlt /> },
-        { name: 'AI', icon: <FaRobot /> },
-        { name: 'Cloud', icon: <FaCloud /> },
-        { name: 'Web3', icon: <FaCubes /> },
-        { name: 'Saas', icon: <FaCloudDownloadAlt /> },
-        { name: 'Marketing', icon: <FaBullhorn /> }
-    ]
     const [animate, setAnimate] = useState(false)
-    
+
     useEffect(() => {
         socket.on('connectedUsers', (count: number) => {
             setConnectedUsers(count)
         })
         setAnimate(true)
     }, [])
-    
-    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUsername(e.target.value)
+
+    const handleUsernameChange = (newUsername: string) => {
+        setUsername(newUsername)
     }
 
     const handleJoin = () => {
@@ -35,23 +25,24 @@ export const FrontPageLogic = () => {
     }
 
     const handleInterestToggle = (interest: string) => {
-        if (userInterests.includes(interest)) {
-            setUserInterests(userInterests.filter(i => i !== interest))
-        } else {
-            setUserInterests([...userInterests, interest])
-        }
+        const updatedInterests = userInterests.includes(interest)
+            ? userInterests.filter((item: string) => item !== interest)
+            : [...userInterests, interest];
+
+        setUserInterests(updatedInterests);
     }
 
     return (
-        <FrontPageUI 
-            username={username} 
-            handleUsernameChange={handleUsernameChange} 
-            handleJoin={handleJoin} 
-            interests={interests} 
-            handleInterestToggle={handleInterestToggle} 
-            selectedInterests={userInterests} 
-            animate={animate} 
+        <FrontPageUI
+            username={username}
+            handleUsernameChange={handleUsernameChange}
+            handleJoin={handleJoin}
+            interests={interests}
+            handleInterestToggle={handleInterestToggle}
+            selectedInterests={userInterests}
+            animate={animate}
             connectedUsers={connectedUsers}
         />
     )
 }
+export { FrontPageLogic as FrontPage }
